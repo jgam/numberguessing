@@ -12,7 +12,71 @@ var guessField = document.querySelector('.guessField');
 var guessCount = 1;
 var resetButton;
 
+guessField.focus();
+
 function checkGuess(){
-    alert("I am a placeholder");
+    var userGuess = Number(guessField.value);
+    if (guessCount === 1){
+        guesses.textContent = 'Previous guesses: ';
+    }
+    guesses.textContent += userGuess + ' ';
+    //so far here adds the guess
+
+    if(userGuess === randomNumber){
+        lastResult.textContent = 'Congratulations! You got it right!';
+        lastResult.style.backgroundColor = 'green';
+        lowOrHi.textContent = '';
+        setGameOver();
+    }
+    else if(guessCount == 10){
+        lastResult.textContent = '!!!GAME OVER!!!';
+        setGameOver();
+    }
+    else{
+        lastResult.testContent = 'Wrong!';
+        lastResult.style.backgroundColor = 'red';
+        if(userGuess < randomNumber){
+            lowOrHi.textContent = 'Last guess was too low!';
+        }
+        else if(userGuess > randomNumber){
+            lowOrHi.textContent = 'Last Guess was too high!'
+        }
+    }
+
+    guessCount++;
+    guessField.value = '';
+    guessField.focus();
+}
+
+guessSubmit.addEventListener('click', checkGuess);
+
+function setGameOver(){
+    guessField.disabled = true;
+    guessSubmit.disabled = true;
+    resetButton = document.createElement('button');
+    resetButton.textContent = 'Start the new game';
+    document.body.appendChild(resetButton);
+    resetButton.addEventListener('click', resetGame);
+}
+
+function resetGame(){
+    guessCount = 1;
+
+    var resetParas = document.querySelectorAll('.resultParas p');//querySelectorAll is to create <div class="resultParas">'s sentences' sequece as a variable
+    for (var i = 0; i < resetParas.length; i++){
+        resetParas[i].textContent = '';//removing the textcontent to be empty
+    }
+
+    resetButton.parentNode.removeChild(resetButton);
+
+    guessField.disabled = false;
+    guessSubmit.disabled = false;
+    guessField.value = '';
+    guessField.focus();
+
+    lastResult.style.backgroundColor = 'white';
+
+    randomNumber = Math.floor(Math.random() * 100) + 1;
+
 }
 </script>
